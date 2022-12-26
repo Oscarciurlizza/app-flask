@@ -16,4 +16,20 @@ container %}
     {% endfor %} {% endif %} {% endwith %}
   </div>
 </div>
+<hr />
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h2>{{ data.title }}</h2>
+  </div>
+  {% if current_user.typeuser.id == 1 %} {% if data.books_purchase|length > 0 %}
+  {% else %}
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <p>There are no books sold 😒</p>
+  </div>
+  {% endif %} {% else %} {% if data.purchase|length > 0 %} {% else %}
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <p>You haven't bought books yet 🤔</p>
+  </div>
+  {% endif %} {% endif %}
+</div>
 {% endblock container %}

@@ -7,8 +7,8 @@ class DeveleopmentConfig(Config):
     DEBUG = True
     MYSQL_HOST = "localhost"
     MYSQL_USER = "root"
-    MYSQL_PASSWORD = "root"
-    MYSQL_DB = "store-flask"
+    MYSQL_PASSWORD = ""
+    MYSQL_DB = "store"
 
 
 config = {

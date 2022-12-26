@@ -1,24 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <table>
-      {% for book in data.books %}
-      <tr>
-        <td>{{ book.isbn }}</td>
-        <td>{{ book.title }}</td>
-        <td>{{ book.edition }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.lastname }}</td>
-        <td>{{ book.name }}</td>
-        <td>{{ book.price }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </body>
-</html>
+{% extends 'body.html' %} {% block container %}
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h1>{{ data.title }}</h1>
+  </div>
+</div>
+<hr />
+
+<div class="row">
+  {% for book in data.books %}
+  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+    <div class="card" style="width: 18rem">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <p class="card-text">{{ book.author.full_name() }}</p>
+        <button id="{{ book.isbn }}" class="btn btn-outline-dark btnBuyBook">Buy book !</button>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+  <input type="hidden" name="csrf-token" value="{{ csrf_token() }}" />
+</div>
+
+{% endblock container %}
+
+{% block customJs %}
+
+<script src="{{ url_for("static", filename="js/list_book.js") }}"></script>
+{% endblock customJs %}
