@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="My firt app with Flask.">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="shorcut icon" href="{{ url_for("static", filename="img/flask.svg") }}">
+    <link href="{{ url_for("static",
+    filename="lib/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet" /> 
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/global.css") }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block customCss %}
+      <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}">
+    {% endblock customCss %}
+  </head>
+  <body>
+    {% block body %} {% endblock body %}
+
+    <script src="{{ url_for("static", filename="lib/bootstrap/js/bootstrap.bundle.js") }}"></script>
+    {% block customJs %}
+    
+    {% endblock customJs %}
+  </body>
+</html>
