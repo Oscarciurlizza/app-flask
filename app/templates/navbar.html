@@ -25,9 +25,10 @@
         
       </ul>
       <section class="d-flex align-items-center gap-3 navbar-nav">
+        <span class="navbar-text">Hi {{ current_user.username }}</span>
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle"
+            class="dropdown-toggle btn btn-outline-dark"
             href="#"
             role="button"
             data-bs-toggle="dropdown"
@@ -36,15 +37,11 @@
             Profile
           </a>
           <ul class="dropdown-menu lef">
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#">You´re <strong>{{ current_user.typeuser.name }}</strong> </a></li>
             <li><hr class="dropdown-divider" /></li>
             <li><a class="dropdown-item" aria-current="page" href="{{ url_for("logout") }}">Logout</a></li>
-
           </ul>
         </li>
-        <span class="navbar-text">Hi {{ current_user.username }} 🌟</span>
-        <span class="navbar-text">{{ current_user.typeuser.name }}</span>
       </section>
     </div>
   </div>

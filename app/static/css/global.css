@@ -1,3 +1,8 @@
 body {
   font-family: "Fira Code", monospace;
 }
+
+.dropdown-menu[data-bs-popper] {
+  left: auto;
+  right: 0;
+}

@@ -3,9 +3,9 @@ from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
+from .models.ModelPurchase import ModelPurchase
 from .models.ModelBook import ModelBook
 from .models.ModelUser import ModelUser
-from .models.ModelPuchase import ModelPurchase
 
 from .models.entities.User import User
 from .models.entities.Book import Book
@@ -87,13 +87,14 @@ def list_books():
 
 
 @app.route("/buyBook", methods=["POST"])
+@login_required
 def buyBook():
     data_request = request.get_json()
     data = {}
     try:
         book = Book(data_request["isbn"], None, None, None, None)
         purchase = Purchase(None, book, current_user)
-        data["success"] = ModelPurchase.registerPurchase(db, purchase)
+        data["success"] = ModelPurchase.register_purchase(db, purchase)
     except Exception as ex:
         data["message"] = format(ex)
         data["success"] = False
