@@ -5,9 +5,11 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 from .models.ModelBook import ModelBook
 from .models.ModelUser import ModelUser
+from .models.ModelPuchase import ModelPurchase
 
 from .models.entities.User import User
 from .models.entities.Book import Book
+from .models.entities.Purchase import Purchase
 
 from .consts import *
 
@@ -87,11 +89,11 @@ def list_books():
 @app.route("/buyBook", methods=["POST"])
 def buyBook():
     data_request = request.get_json()
-    print(data_request)
     data = {}
     try:
-        book = Book()
-        data["success"] = True
+        book = Book(data_request["isbn"], None, None, None, None)
+        purchase = Purchase(None, book, current_user)
+        data["success"] = ModelPurchase.registerPurchase(db, purchase)
     except Exception as ex:
         data["message"] = format(ex)
         data["success"] = False
