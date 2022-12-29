@@ -1,5 +1,4 @@
-{% extends 'body.html' %} {% block title %} Home {% endblock title %} {% block
-container %}
+{% extends 'body.html' %} {% block container %}
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     {% with messages = get_flashed_messages() %} {% if messages %} {% for
@@ -19,14 +18,65 @@ container %}
 <hr />
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-    <h2>{{ data.title }}</h2>
+    <h2>{{ data.title }} 📖</h2>
   </div>
-  {% if current_user.typeuser.id == 1 %} {% if data.books_purchase|length > 0 %}
+  {% if current_user.typeuser.id == 1 %} {% if data.books_sold|length > 0 %}
+
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr class="text-center">
+          <th scope="col">#</th>
+          <th scope="col">Isbn</th>
+          <th scope="col">Title</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set count = namespace(total=0) %} 
+        {% for book_sold in data.books_sold
+        %}
+        <tr class="text-center">
+          <th scope="row">{{ loop.index }}</th>
+          <td>{{ book_sold.isbn }}</td>
+          <td>{{ book_sold.title }}</td>
+          <td>{{ book_sold.price }}</td>
+          <td>{{ book_sold.sold_units }}</td>
+          <td>S.{{ (book_sold.sold_units * book_sold.price) }}</td>
+        </tr>
+        {% set count.total = count.total + (book_sold.sold_units *
+        book_sold.price) %} 
+        {% endfor %}
+        <tr class="text-center">
+          <td colspan="5"></td>
+          <td class="fw-bold">S.{{ count.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   {% else %}
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <p>There are no books sold 😒</p>
   </div>
-  {% endif %} {% else %} {% if data.purchase|length > 0 %} {% else %}
+  {% endif %} {% else %} {% if data.purchases|length > 0 %} {% for purchase in
+  data.purchases %}
+  <div class="d-flex col-sm-12 col-md-6 col-lg-4 col-xl-4">
+    <div
+      class="card text-bg-bg-secondary mb-3 mt-3 w-100"
+      style="max-width: 18rem"
+    >
+      <div class="card-header">{{ purchase.formatted_date() }}</div>
+      <div class="card-body">
+        <h5 class="card-title">isbn: {{ purchase.book.isbn }}</h5>
+        <p class="card-text">{{ purchase.book.title }}</p>
+        <p class="card-text fwb">S.{{ purchase.book.price }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %}
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <p>You haven't bought books yet 🤔</p>
   </div>

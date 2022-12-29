@@ -5,3 +5,4 @@ class Book():
         self.author = author
         self.edition = edition
         self.price = price
+        self.sold_units = 0

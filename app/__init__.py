@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Mail
 
 from .models.ModelPurchase import ModelPurchase
 from .models.ModelBook import ModelBook
@@ -12,6 +13,7 @@ from .models.entities.Book import Book
 from .models.entities.Purchase import Purchase
 
 from .consts import *
+from .emails import confirm_purchase
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 db = MySQL(app)
 login_manager_app = LoginManager(app)
+mail = Mail()
 
 
 @login_manager_app.user_loader
@@ -31,18 +34,25 @@ def load_user(id):
 def home():
     if current_user.is_authenticated:
         if current_user.typeuser.id == 1:
-            books_sold = []
-            data = {
-                "title": "Books Sold",
-                "books_sold": books_sold
-            }
+            try:
+                books_sold = ModelBook.list_books_sold(db)
+                data = {
+                    "title": "Books Sold",
+                    "books_sold": books_sold
+                }
+                return render_template("home.html", data=data)
+            except Exception as ex:
+                return render_template("errors/error.html", message=format(ex))
         else:
-            my_purchase = []
-            data = {
-                "title": "My Purchase",
-                "purchase": my_purchase
-            }
-        return render_template("home.html", data=data)
+            try:
+                purchases = ModelPurchase.list_purchases_user(db, current_user)
+                data = {
+                    "title": "My Purchase",
+                    "purchases": purchases
+                }
+                return render_template("home.html", data=data)
+            except Exception as ex:
+                return render_template("errors/error.html", message=format(ex))
     else:
         return redirect(url_for("login"))
 
@@ -92,9 +102,12 @@ def buyBook():
     data_request = request.get_json()
     data = {}
     try:
-        book = Book(data_request["isbn"], None, None, None, None)
+        # book = Book(data_request["isbn"], None, None, None, None)
+        book = ModelBook.read_book(db, data_request["isbn"])
         purchase = Purchase(None, book, current_user)
         data["success"] = ModelPurchase.register_purchase(db, purchase)
+        # confirm_purchase(mail, current_user, book)
+        confirm_purchase(app, mail, current_user, book)
     except Exception as ex:
         data["message"] = format(ex)
         data["success"] = False
@@ -114,6 +127,7 @@ def page_unauthorized(error):
 def init_app(config):
     app.config.from_object(config)
     csrf.init_app(app)
+    mail.init_app(app)
     app.register_error_handler(404, page_404)
     app.register_error_handler(401, page_unauthorized)
     return app
